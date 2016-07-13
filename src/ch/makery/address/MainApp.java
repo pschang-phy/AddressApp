@@ -3,6 +3,7 @@ package ch.makery.address;
 import java.io.IOException;
 
 import ch.makery.address.model.Person;
+import ch.makery.address.view.PersonOverviewController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -65,6 +66,10 @@ public class MainApp extends Application {
 			AnchorPane personOverview = (AnchorPane) loader.load();
 
 			this.rootLayout.setCenter(personOverview);
+
+			PersonOverviewController controller = loader.getController();
+			controller.setMainApp(this);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
