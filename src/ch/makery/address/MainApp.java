@@ -3,14 +3,17 @@ package ch.makery.address;
 import java.io.IOException;
 
 import ch.makery.address.model.Person;
+import ch.makery.address.view.PersonEditDialogController;
 import ch.makery.address.view.PersonOverviewController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
@@ -40,6 +43,7 @@ public class MainApp extends Application {
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("AddressApp");
+		this.primaryStage.getIcons().add(new Image("file:resources/images/address_book_32.png"));
 
 		initRootLayout();
 		showPersonOverview();
@@ -74,6 +78,39 @@ public class MainApp extends Application {
 			e.printStackTrace();
 		}
 
+	}
+
+	public boolean showPersonEditDialog(Person person) {
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(MainApp.class.getResource("view/PersonEditDialog.fxml"));
+			AnchorPane page = (AnchorPane) loader.load();
+
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Edit Person");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(primaryStage);
+
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			PersonEditDialogController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setPerson(person);
+
+			dialogStage.showAndWait();
+
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			e.printStackTrace();
+
+			return false;
+		}
+
+	}
+
+	public Stage getPrimaryStage() {
+		return this.primaryStage;
 	}
 
 	public static void main(String[] args) {
